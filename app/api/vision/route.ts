@@ -1,17 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-
-// Simulated vision API
-// In production, you would use services like Google Vision API, AWS Rekognition, etc.
-function analyzeImage(base64: string): string {
-  // Simulated analysis
-  const analyses = [
-    "Image détectée: L'image contient des éléments visuels distincts. Les réseaux de neurones convolutifs ont identifié les patterns suivants...",
-    "Analyse complète: L'IA a reconnu les objets principaux en analysant couche par couche. Les features de bas niveau (bords) ont permis d'identifier les features de haut niveau.",
-    "Reconnaissance réussie: Le modèle a comparé l'image avec sa base de données d'entraînement et a trouvé les correspondances les plus probables.",
-  ]
-
-  return analyses[Math.floor(Math.random() * analyses.length)]
-}
+import { analyzeImage } from "@/lib/openai"
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,11 +9,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Image invalide" }, { status: 400 })
     }
 
-    const analysis = analyzeImage(image)
+    // Extract base64 from data URL and determine image type
+    const base64Match = image.match(/data:image\/(.*?);base64,(.*)/)
+    if (!base64Match) {
+      return NextResponse.json({ error: "Format d'image invalide" }, { status: 400 })
+    }
+
+    const imageType = base64Match[1] as "jpeg" | "png" | "gif" | "webp"
+    const base64Data = base64Match[2]
+
+    const analysis = await analyzeImage(base64Data, imageType)
 
     return NextResponse.json({ analysis })
   } catch (error) {
     console.error("Erreur vision:", error)
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Erreur serveur" }, { status: 500 })
   }
 }

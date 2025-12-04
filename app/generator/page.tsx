@@ -10,10 +10,12 @@ export default function GeneratorPage() {
   const [generationType, setGenerationType] = useState<"text" | "idea">("text")
   const [result, setResult] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
     setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch("/api/generator", {
@@ -22,9 +24,15 @@ export default function GeneratorPage() {
         body: JSON.stringify({ prompt, type: generationType }),
       })
       const data = await response.json()
-      setResult(data.content)
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors de la génération")
+      } else {
+        setResult(data.content)
+      }
     } catch (error) {
       console.error("Erreur:", error)
+      setError("Erreur de connexion")
     } finally {
       setLoading(false)
     }
@@ -37,7 +45,7 @@ export default function GeneratorPage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Générateur de Contenu</h1>
           <p className="text-slate-300">
-            Crée des textes avec l'IA et découvre comment les prompts influencent les résultats
+            Crée des textes avec l'IA et découvre comment les prompts influencent les résultats générés
           </p>
         </div>
 
@@ -46,7 +54,7 @@ export default function GeneratorPage() {
             <div>
               <label className="block text-white font-medium mb-2">Type de génération</label>
               <div className="flex gap-4">
-                <label className="flex items-center text-slate-300 cursor-pointer">
+                <label className="flex items-center text-slate-300 cursor-pointer hover:text-white transition">
                   <input
                     type="radio"
                     value="text"
@@ -56,7 +64,7 @@ export default function GeneratorPage() {
                   />
                   Texte créatif
                 </label>
-                <label className="flex items-center text-slate-300 cursor-pointer">
+                <label className="flex items-center text-slate-300 cursor-pointer hover:text-white transition">
                   <input
                     type="radio"
                     value="idea"
@@ -75,7 +83,7 @@ export default function GeneratorPage() {
                 placeholder="Décris ce que tu veux générer... Plus le prompt est détaillé, meilleur sera le résultat!"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
-                className="w-full h-32 bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 rounded-lg p-3"
+                className="w-full h-32 bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 rounded-lg p-3 text-sm border"
               />
             </div>
 
@@ -86,13 +94,23 @@ export default function GeneratorPage() {
             >
               {loading ? "Génération en cours..." : "Générer"}
             </Button>
+            {error && <p className="text-red-400 text-sm">{error}</p>}
           </div>
         </Card>
 
         {result && (
           <Card className="bg-slate-800/50 border-violet-500/30 border-2 p-6 mb-6">
             <h3 className="font-bold text-white mb-4">Résultat généré</h3>
-            <div className="text-slate-100 leading-relaxed whitespace-pre-wrap">{result}</div>
+            <div className="text-slate-100 text-sm leading-relaxed whitespace-pre-wrap">{result}</div>
+            <Button
+              onClick={() => {
+                setPrompt("")
+                setResult(null)
+              }}
+              className="mt-4 bg-slate-700 hover:bg-slate-600 text-white"
+            >
+              Nouvelle génération
+            </Button>
           </Card>
         )}
 
@@ -100,17 +118,17 @@ export default function GeneratorPage() {
           <Card className="bg-slate-800/50 border-slate-700 p-6">
             <h3 className="font-bold text-white mb-2">Comment rédiger un bon prompt?</h3>
             <ul className="text-slate-300 text-sm space-y-2">
-              <li>• Sois spécifique et détaillé</li>
-              <li>• Fournis un contexte clair</li>
-              <li>• Donne des exemples si possible</li>
-              <li>• Décris le style et le ton souhaité</li>
+              <li>• Sois spécifique et détaillé dans ta description</li>
+              <li>• Fournis un contexte clair et pertinent</li>
+              <li>• Donne des exemples concrets si possible</li>
+              <li>• Décris le style et le ton que tu souhaites</li>
             </ul>
           </Card>
           <Card className="bg-slate-800/50 border-slate-700 p-6">
             <h3 className="font-bold text-white mb-2">À découvrir</h3>
             <p className="text-slate-300 text-sm">
               Essaie le même prompt avec des variantes pour voir comment les petits changements affectent complètement
-              la sortie de l'IA.
+              la sortie de l'IA. C'est un excellent moyen d'apprendre l'ingénierie de prompts!
             </p>
           </Card>
         </div>

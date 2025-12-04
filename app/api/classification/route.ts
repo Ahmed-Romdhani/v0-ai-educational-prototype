@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { classifyData } from "@/lib/openai"
 
 // Simple classification algorithm
 function classifyInput(input: string, trainingData: string): string {
@@ -41,11 +42,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Entrée invalide" }, { status: 400 })
     }
 
-    const classification = classifyInput(input, trainingData || "")
+    const classificationResult = await classifyData(
+      `Données d'entraînement: ${trainingData || "Non fourni"}\n\nClassifier: ${input}`,
+    )
 
-    return NextResponse.json({ classification })
+    return NextResponse.json({
+      classification: classificationResult.category,
+      confidence: classificationResult.confidence,
+      explanation: classificationResult.explanation,
+    })
   } catch (error) {
     console.error("Erreur classification:", error)
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : "Erreur serveur" }, { status: 500 })
   }
 }

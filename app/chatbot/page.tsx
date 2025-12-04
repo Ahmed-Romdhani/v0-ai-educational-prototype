@@ -17,6 +17,7 @@ export default function ChatbotPage() {
   ])
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function ChatbotPage() {
 
     const userMessage = input
     setInput("")
+    setError(null)
     setMessages((prev) => [...prev, { role: "user", content: userMessage }])
     setLoading(true)
 
@@ -39,9 +41,29 @@ export default function ChatbotPage() {
         body: JSON.stringify({ message: userMessage }),
       })
       const data = await response.json()
-      setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors de la réponse")
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: `Désolé, une erreur s'est produite: ${data.error}`,
+          },
+        ])
+      } else {
+        setMessages((prev) => [...prev, { role: "assistant", content: data.response }])
+      }
     } catch (error) {
       console.error("Erreur:", error)
+      setError("Erreur de connexion")
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Désolé, je ne peux pas répondre en ce moment. Vérifie ta connexion.",
+        },
+      ])
     } finally {
       setLoading(false)
     }
@@ -54,7 +76,7 @@ export default function ChatbotPage() {
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-2">Chatbot Intelligent</h1>
           <p className="text-slate-300">
-            Discute avec une IA générative pour découvrir comment elle comprend et répond
+            Discute avec une IA générative pour découvrir comment elle comprend et répond intelligemment à tes questions
           </p>
         </div>
 
@@ -63,13 +85,13 @@ export default function ChatbotPage() {
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${msg.role === "user" ? "bg-indigo-600 text-white" : "bg-slate-700 text-slate-100"}`}
+                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg text-sm ${msg.role === "user" ? "bg-indigo-600 text-white" : "bg-slate-700 text-slate-100"}`}
                 >
                   {msg.content}
                 </div>
               </div>
             ))}
-            {loading && <div className="text-slate-400 italic">En attente de réponse...</div>}
+            {loading && <div className="text-slate-400 italic text-sm">En attente de réponse...</div>}
             <div ref={messagesEndRef} />
           </div>
 
@@ -90,21 +112,22 @@ export default function ChatbotPage() {
               Envoyer
             </Button>
           </form>
+          {error && <p className="text-red-400 text-xs mt-2">{error}</p>}
         </Card>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-slate-800/50 border-slate-700 p-6">
             <h3 className="font-bold text-white mb-2">Comment ça marche?</h3>
             <p className="text-slate-300 text-sm">
-              Le chatbot utilise un modèle de langage pour comprendre ton message et générer une réponse basée sur les
-              patterns dans les données d'entraînement.
+              Le chatbot utilise un modèle de langage avancé pour comprendre ton message et générer une réponse
+              cohérente basée sur les patterns dans les données d'entraînement.
             </p>
           </Card>
           <Card className="bg-slate-800/50 border-slate-700 p-6">
             <h3 className="font-bold text-white mb-2">À explorer</h3>
             <p className="text-slate-300 text-sm">
               Essaie des questions variées pour voir comment le modèle gère différents contextes, langues et styles de
-              questions.
+              questions. Observe les limites et capacités de l'IA.
             </p>
           </Card>
         </div>

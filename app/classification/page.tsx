@@ -9,12 +9,14 @@ import { Input } from "@/components/ui/input"
 export default function ClassificationPage() {
   const [trainData, setTrainData] = useState("")
   const [testInput, setTestInput] = useState("")
-  const [result, setResult] = useState<string | null>(null)
+  const [result, setResult] = useState<{ category: string; confidence: number; explanation: string } | null>(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleClassify = async () => {
     if (!testInput.trim()) return
     setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch("/api/classification", {
@@ -23,9 +25,15 @@ export default function ClassificationPage() {
         body: JSON.stringify({ input: testInput, trainingData: trainData }),
       })
       const data = await response.json()
-      setResult(data.classification)
+
+      if (!response.ok) {
+        setError(data.error || "Erreur lors de la classification")
+      } else {
+        setResult(data)
+      }
     } catch (error) {
       console.error("Erreur:", error)
+      setError("Erreur de connexion")
     } finally {
       setLoading(false)
     }
@@ -36,20 +44,22 @@ export default function ClassificationPage() {
       <Navigation />
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Classification</h1>
-          <p className="text-slate-300">Apprends comment l'IA classe et catégorise des données</p>
+          <h1 className="text-4xl font-bold text-white mb-2">Classification IA</h1>
+          <p className="text-slate-300">Apprends comment l'IA classe et catégorise des données avec intelligence</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Card className="bg-slate-800/50 border-teal-500/30 border-2 p-6">
             <h3 className="font-bold text-white mb-4">Données d'entraînement</h3>
             <textarea
-              placeholder="Exemple: chat minou félin / chien toutou canin / oiseau plume ailé"
+              placeholder="Exemple: Fruit rouge sucré délicieux / Légume vert croquant nutritif / Viande protéine carnivore"
               value={trainData}
               onChange={(e) => setTrainData(e.target.value)}
-              className="w-full h-32 bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 rounded-lg p-3"
+              className="w-full h-32 bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 rounded-lg p-3 text-sm"
             />
-            <p className="text-xs text-slate-400 mt-2">Format: label mots-clés / label mots-clés</p>
+            <p className="text-xs text-slate-400 mt-2">
+              Format: label description mots-clés / label description mots-clés
+            </p>
           </Card>
 
           <Card className="bg-slate-800/50 border-teal-500/30 border-2 p-6">
@@ -66,13 +76,30 @@ export default function ClassificationPage() {
               disabled={loading || !testInput.trim()}
               className="w-full bg-teal-600 hover:bg-teal-700 text-white"
             >
-              {loading ? "Analyse..." : "Classifier"}
+              {loading ? "Classification en cours..." : "Classifier"}
             </Button>
+            {error && (
+              <div className="mt-4 p-3 bg-red-600/20 border border-red-500 rounded-lg text-red-400 text-sm">
+                {error}
+              </div>
+            )}
             {result && (
-              <div className="mt-4 p-3 bg-teal-600/20 border border-teal-500 rounded-lg">
-                <p className="text-white">
-                  <span className="font-bold">Résultat:</span> {result}
-                </p>
+              <div className="mt-4 space-y-3">
+                <div className="p-3 bg-teal-600/20 border border-teal-500 rounded-lg">
+                  <p className="text-white">
+                    <span className="font-bold">Catégorie:</span> {result.category}
+                  </p>
+                </div>
+                <div className="p-3 bg-teal-600/20 border border-teal-500 rounded-lg">
+                  <p className="text-white">
+                    <span className="font-bold">Confiance:</span> {(result.confidence * 100).toFixed(1)}%
+                  </p>
+                </div>
+                <div className="p-3 bg-teal-600/20 border border-teal-500 rounded-lg">
+                  <p className="text-white text-sm">
+                    <span className="font-bold">Explication:</span> {result.explanation}
+                  </p>
+                </div>
               </div>
             )}
           </Card>
@@ -82,15 +109,15 @@ export default function ClassificationPage() {
           <Card className="bg-slate-800/50 border-slate-700 p-6">
             <h3 className="font-bold text-white mb-2">Algorithmes de classification</h3>
             <p className="text-slate-300 text-sm">
-              La classification utilise des modèles comme Naive Bayes, SVM ou arbres de décision pour catégoriser les
-              données.
+              La classification utilise des modèles comme Naive Bayes, SVM ou réseaux de neurones pour catégoriser
+              intelligemment les données en fonction des patterns appris.
             </p>
           </Card>
           <Card className="bg-slate-800/50 border-slate-700 p-6">
             <h3 className="font-bold text-white mb-2">Points clés</h3>
             <p className="text-slate-300 text-sm">
               Plus les données d'entraînement sont variées et précises, meilleure sera la classification de nouvelles
-              données.
+              données. C'est le cœur du machine learning supervisé.
             </p>
           </Card>
         </div>
