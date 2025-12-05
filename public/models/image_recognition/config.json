@@ -1,0 +1,27 @@
+{
+  "model": {
+    "path": "/models/image-recognition/model.h5",
+    "type": "keras_h5",
+    "requiresBackend": true
+  },
+  
+  "api": {
+    "endpoint": "http://localhost:5000/predict",
+    "method": "POST",
+    "contentType": "multipart/form-data"
+  },
+  
+  "ui": {
+    "showConfidence": true,
+    "maxFileSize": 5,
+    "allowedFormats": ["jpg", "jpeg", "png", "webp"],
+    "previewSize": [400, 400]
+  },
+  
+  "examples": {
+    "testImages": [
+      "/images/examples/test-cat.jpg",
+      "/images/examples/test-dog.jpg"
+    ]
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "classes": [
+    {
+      "id": 0,
+      "name": "airplane",
+      "displayName": "Avion",
+      "description": "Image d'un avion ou d'un aéronef",
+      "icon": "✈️",
+      "color": "#3B82F6"
+    },
+    {
+      "id": 1,
+      "name": "automobile",
+      "displayName": "Voiture",
+      "description": "Véhicule automobile",
+      "icon": "🚗",
+      "color": "#EF4444"
+    },
+    {
+      "id": 2,
+      "name": "bird",
+      "displayName": "Oiseau",
+      "description": "Oiseaux de différentes espèces",
+      "icon": "🐦",
+      "color": "#10B981"
+    },
+    {
+      "id": 3,
+      "name": "cat",
+      "displayName": "Chat",
+      "description": "Chats domestiques",
+      "icon": "🐱",
+      "color": "#F59E0B"
+    },
+    {
+      "id": 4,
+      "name": "deer",
+      "displayName": "Cerf",
+      "description": "Cerfs, biches et faons",
+      "icon": "🦌",
+      "color": "#8B4513"
+    },
+    {
+      "id": 5,
+      "name": "dog",
+      "displayName": "Chien",
+      "description": "Chiens de différentes races",
+      "icon": "🐕",
+      "color": "#D97706"
+    },
+    {
+      "id": 6,
+      "name": "frog",
+      "displayName": "Grenouille",
+      "description": "Grenouilles et crapauds",
+      "icon": "🐸",
+      "color": "#059669"
+    },
+    {
+      "id": 7,
+      "name": "horse",
+      "displayName": "Cheval",
+      "description": "Chevaux et poneys",
+      "icon": "🐴",
+      "color": "#7C3AED"
+    },
+    {
+      "id": 8,
+      "name": "ship",
+      "displayName": "Bateau",
+      "description": "Navires et bateaux",
+      "icon": "🚢",
+      "color": "#1D4ED8"
+    },
+    {
+      "id": 9,
+      "name": "truck",
+      "displayName": "Camion",
+      "description": "Camions et poids lourds",
+      "icon": "🚚",
+      "color": "#DC2626"
+    }
+  ],
+  
+  "confidenceThresholds": {
+    "high": 0.8,
+    "medium": 0.5,
+    "low": 0.3
+  }
+}

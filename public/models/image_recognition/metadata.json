@@ -1,0 +1,38 @@
+{
+  "modelName": "Image Recognition Model",
+  "version": "1.0.0",
+  "description": "Modèle de reconnaissance d'images entraîné avec Keras/TensorFlow",
+  "author": "Your Name",
+  "createdDate": "2024-01-01",
+  "lastModified": "2024-01-15",
+  
+  "modelDetails": {
+    "framework": "TensorFlow/Keras",
+    "format": "H5 (Keras)",
+    "fileSize": "45.7 MB",
+    "architecture": "CNN",
+    "inputShape": [224, 224, 3],
+    "outputClasses": 10,
+    "trainingEpochs": 50,
+    "validationAccuracy": 0.92
+  },
+  
+  "classes": [
+    "airplane", "automobile", "bird", "cat", "deer",
+    "dog", "frog", "horse", "ship", "truck"
+  ],
+  
+  "preprocessing": {
+    "resize": [224, 224],
+    "normalization": "divide_by_255",
+    "colorMode": "RGB"
+  },
+  
+  "usage": {
+    "backend": "Python avec TensorFlow",
+    "frontend": "Conversion nécessaire vers TensorFlow.js",
+    "apiEndpoint": "/api/predict-image"
+  },
+  
+  "notes": "Ce modèle est au format .h5 et nécessite un backend Python pour l'inférence."
+}

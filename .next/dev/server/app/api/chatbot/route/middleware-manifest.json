@@ -1,0 +1,42 @@
+{
+  "sorted_middleware": [
+    "/api/chatbot/route"
+  ],
+  "middleware": {},
+  "instrumentation": null,
+  "functions": {
+    "/api/chatbot/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "server/server-reference-manifest.js",
+        "server/app/api/chatbot/route_client-reference-manifest.js",
+        "server/edge/chunks/_next-internal_server_app_api_chatbot_route_actions_5df55b38.js",
+        "server/edge/chunks/node_modules_next_dist_esm_65f1bfab._.js",
+        "server/edge/chunks/node_modules_next_dist_compiled_9ac431f9._.js",
+        "server/edge/chunks/node_modules_next_dist_7bea040f._.js",
+        "server/edge/chunks/edge-wrapper_7e672017.js",
+        "server/edge/chunks/node_modules_@opentelemetry_api_build_esm_5713bd62._.js",
+        "server/edge/chunks/[root-of-the-server]__157ac954._.js",
+        "server/edge/chunks/turbopack-edge-wrapper_7496c318.js"
+      ],
+      "name": "app/api/chatbot/route",
+      "page": "/api/chatbot/route",
+      "matchers": [
+        {
+          "regexp": "^/api/chatbot(?:/)?$",
+          "originalSource": "/api/chatbot"
+        }
+      ],
+      "wasm": [],
+      "assets": [],
+      "env": {
+        "__NEXT_BUILD_ID": "development",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "dt+0n3JILS5V3644PIBqU7vzZgEWClyT6wClkjZlxuw=",
+        "__NEXT_PREVIEW_MODE_ID": "0b9dc01ddccf7116b5ab5cf38c56215c",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "212ff6e1cd0b7813ab064611457838e1c86bccc2c4771e7fe60435d1afc80a5a",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "b3a4ec9dd78e7de73bd89459f5044270fa3dba421e1fb285dd0c80308790131a"
+      }
+    }
+  }
+}
